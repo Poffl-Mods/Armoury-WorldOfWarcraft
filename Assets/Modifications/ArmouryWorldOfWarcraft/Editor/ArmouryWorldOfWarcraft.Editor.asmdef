@@ -1,0 +1,17 @@
+{
+  "name": "ArmouryWorldOfWarcraft.Editor",
+  "rootNamespace": "ArmouryWorldOfWarcraft.Editor",
+  "references": [
+    "Mods.Editor",
+    "Unity.ScriptableBuildPipeline.Editor"
+  ],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

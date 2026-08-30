@@ -1,0 +1,16 @@
+{
+  "strings": {
+    "wow-frostmourne-name": {
+      "Text": "Frostmourne",
+      "ShouldProcess": false
+    },
+    "wow-frostmourne-description": {
+      "Text": "A runeblade of impossible cold whose dark edge seems to hunger for the souls of the fallen.",
+      "ShouldProcess": false
+    },
+    "wow-frostmourne-flavor": {
+      "Text": "Whomsoever takes up this blade shall wield power eternal. Just as the blade rends flesh, so must power scar the spirit.",
+      "ShouldProcess": false
+    }
+  }
+}
