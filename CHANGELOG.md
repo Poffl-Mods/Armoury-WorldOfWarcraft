@@ -2,7 +2,7 @@
 
 All notable changes to **Armoury: Frostmourne** are documented here.
 
-## 0.1.10 — Frostmourne V1
+## 1.0.0 — Frostmourne V1
 
 ### Added
 

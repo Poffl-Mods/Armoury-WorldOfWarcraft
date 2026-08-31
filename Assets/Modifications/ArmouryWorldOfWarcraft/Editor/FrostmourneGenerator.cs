@@ -30,7 +30,7 @@ namespace ArmouryWorldOfWarcraft.Editor
         private const string PrefabPath = Art + "/Frostmourne.prefab";
         private const string BeltPrefabPath = Art + "/Frostmourne_Holstered.prefab";
 
-        private const string Version = "0.1.10";
+        private const string Version = "1.0.0";
 
         [MenuItem("Armoury World of Warcraft/Build 0.1.0")]
         public static void Build()
