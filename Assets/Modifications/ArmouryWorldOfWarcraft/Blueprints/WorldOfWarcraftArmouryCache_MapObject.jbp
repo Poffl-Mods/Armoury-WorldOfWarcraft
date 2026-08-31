@@ -1,0 +1,21 @@
+{
+  "AssetId": "cba94710e96647d89c93ff9dc5c566d2",
+  "Data": {
+    "$type": "b7d695389bff6604ca37f190a61f05b5, BlueprintDynamicMapObject",
+    "PrototypeLink": "",
+    "m_Overrides": [],
+    "Components": [],
+    "Author": "Poffl",
+    "Comment": "Persistent World of Warcraft armoury cache in the Warrant Chamber.",
+    "m_DisplayName": null,
+    "m_Description": null,
+    "m_Icon": null,
+    "Prefab": {
+      "guid": "03808839da7064345bc98dc5bb25a5ba",
+      "fileid": 1004015899492866512
+    }
+  },
+  "Meta": {
+    "ShadowDeleted": false
+  }
+}

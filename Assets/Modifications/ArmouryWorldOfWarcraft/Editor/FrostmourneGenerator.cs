@@ -23,14 +23,16 @@ namespace ArmouryWorldOfWarcraft.Editor
         private const string MetallicPath = Art + "/Frostmourne_Metallic.png";
         private const string NormalPath = Art + "/Frostmourne_Normal.png";
         private const string RoughnessPath = Art + "/Frostmourne_Roughness.png";
+        private const string IconPath = Art + "/Frostmourne_Icon.png";
         private const string MaterialPath = Art + "/Frostmourne.mat";
         private const string MaskPath = Art + "/Frostmourne_MetallicSmoothness.asset";
         private const string PackedNormalPath = Art + "/Frostmourne_NormalPacked.asset";
         private const string PrefabPath = Art + "/Frostmourne.prefab";
+        private const string BeltPrefabPath = Art + "/Frostmourne_Holstered.prefab";
 
-        private const string Version = "0.0.7";
+        private const string Version = "0.1.10";
 
-        [MenuItem("Armoury World of Warcraft/Build 0.0.7")]
+        [MenuItem("Armoury World of Warcraft/Build 0.1.0")]
         public static void Build()
         {
             Generate();
@@ -50,6 +52,8 @@ namespace ArmouryWorldOfWarcraft.Editor
             Directory.CreateDirectory(Blueprints);
             GenerateArt();
             GenerateBlueprint();
+            FrostmourneProgressionGenerator.Generate();
+            WorldOfWarcraftArmouryCacheGenerator.Generate();
             AssetDatabase.Refresh();
             Debug.Log("[ArmouryWorldOfWarcraft] Generated Frostmourne: " + WeaponGuid);
         }
@@ -89,10 +93,33 @@ namespace ArmouryWorldOfWarcraft.Editor
             Bounds bounds = CalculateBounds(model);
             // v0.0.7 paper-doll calibration: move another 1.2 metres in the same
             // direction as the v0.0.6 correction (offset +0.35 -> +1.55).
-            model.transform.localPosition = new Vector3(-bounds.center.x, -(bounds.max.y - 0.16f) + 1.55f, -bounds.center.z);
+            Vector3 gripPosition = new Vector3(-bounds.center.x, -(bounds.max.y - 0.16f) + 1.25f, -bounds.center.z);
+            model.transform.localPosition = gripPosition;
             Debug.Log($"[ArmouryWorldOfWarcraft] FBX bounds {bounds.size}; model offset {model.transform.localPosition}");
             PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
             UnityEngine.Object.DestroyImmediate(root);
+
+            // Holstered weapons use a separate visual so their pose cannot affect the
+            // inventory or drawn weapon model.
+            GameObject beltRoot = new GameObject("Frostmourne_Holstered_Root");
+            EquipmentOffsets beltOffsets = beltRoot.AddComponent<EquipmentOffsets>();
+            ConfigureOffsets(beltOffsets);
+            AddOptionalComponent(beltRoot, "FxLocatorMapper");
+            AddRequiredComponent(beltRoot, "ArmouryWorldOfWarcraft.Runtime.FrostmourneMaterialBinder");
+
+            GameObject beltModel = UnityEngine.Object.Instantiate(fbx);
+            beltModel.name = "Frostmourne_Holstered_FBX_Model";
+            beltModel.transform.SetParent(beltRoot.transform, false);
+            beltModel.transform.localPosition = gripPosition;
+            beltModel.transform.localRotation = Quaternion.AngleAxis(90f, Vector3.up)
+                * Quaternion.Euler(0f, 0f, 90f)
+                * Quaternion.AngleAxis(90f, Vector3.right);
+            beltModel.transform.localScale = Vector3.one * 0.9f;
+            foreach (Renderer renderer in beltModel.GetComponentsInChildren<Renderer>(true))
+                renderer.sharedMaterial = material;
+
+            PrefabUtility.SaveAsPrefabAsset(beltRoot, BeltPrefabPath);
+            UnityEngine.Object.DestroyImmediate(beltRoot);
             AssetDatabase.SaveAssets();
         }
 
@@ -116,8 +143,8 @@ namespace ArmouryWorldOfWarcraft.Editor
                 slot.FindPropertyRelative("Position").vector3Value = Vector3.zero;
                 slot.FindPropertyRelative("Rotation").vector3Value = Vector3.zero;
             }
-            SetSlotOffset(slots, 6, new Vector3(0.01f, -0.03f, -0.12f), new Vector3(358.31f, 185.50f, 90.41f));
-            SetSlotOffset(slots, 8, new Vector3(-0.06f, -0.04f, -0.09f), new Vector3(0.91f, 11.02f, 276.02f));
+            SetSlotOffset(slots, 6, new Vector3(0.01f, -0.03f, -0.12f), new Vector3(358.31f, 95.50f, 90.41f));
+            SetSlotOffset(slots, 8, new Vector3(-0.06f, -0.04f, -0.09f), new Vector3(0.91f, 281.02f, 276.02f));
             serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -224,9 +251,15 @@ namespace ArmouryWorldOfWarcraft.Editor
 
         private static void GenerateBlueprint()
         {
+            UnityEngine.Object icon = PrepareIcon(IconPath);
+            if (!AssetDatabase.TryGetGUIDAndLocalFileIdentifier(icon, out string iconGuid, out long iconFileId))
+                throw new InvalidDataException("Frostmourne icon reference could not be resolved.");
             UnityEngine.Object prefab = AssetDatabase.LoadMainAssetAtPath(PrefabPath);
             if (prefab == null || !AssetDatabase.TryGetGUIDAndLocalFileIdentifier(prefab, out string prefabGuid, out long prefabFileId))
                 throw new InvalidDataException("Prefab reference could not be resolved.");
+            UnityEngine.Object beltPrefab = AssetDatabase.LoadMainAssetAtPath(BeltPrefabPath);
+            if (beltPrefab == null || !AssetDatabase.TryGetGUIDAndLocalFileIdentifier(beltPrefab, out string beltPrefabGuid, out long beltPrefabFileId))
+                throw new InvalidDataException("Holstered prefab reference could not be resolved.");
             JObject weapon = LoadPrototype();
             weapon["AssetId"] = WeaponGuid;
             weapon["Data"]["PrototypeLink"] = WeaponPrototype;
@@ -235,8 +268,12 @@ namespace ArmouryWorldOfWarcraft.Editor
             SetLocalized(weapon, "m_DisplayName", "wow-frostmourne-name");
             SetLocalized(weapon, "m_Description", "wow-frostmourne-description");
             SetLocalized(weapon, "m_FlavorText", "wow-frostmourne-flavor");
+            weapon["Data"]["m_Icon"] = new JObject { ["guid"] = iconGuid, ["fileid"] = iconFileId };
+            AddOverride(weapon, "m_Icon");
             weapon["Data"]["m_VisualParameters"]["m_WeaponModel"] = new JObject { ["guid"] = prefabGuid, ["fileid"] = prefabFileId };
             AddOverride(weapon, "m_VisualParameters.m_WeaponModel");
+            weapon["Data"]["m_VisualParameters"]["m_WeaponBeltModelOverride"] = new JObject { ["guid"] = beltPrefabGuid, ["fileid"] = beltPrefabFileId };
+            AddOverride(weapon, "m_VisualParameters.m_WeaponBeltModelOverride");
             // Rogue Trader's serialized name for the TwoHandedBrutal animation set.
             weapon["Data"]["m_VisualParameters"]["m_WeaponAnimationStyle"] = "BrutalTwoHanded";
             AddOverride(weapon, "m_VisualParameters.m_WeaponAnimationStyle");
@@ -249,6 +286,20 @@ namespace ArmouryWorldOfWarcraft.Editor
             Override(weapon, "IsNonRemovable", false);
             Override(weapon, "m_IsNotable", true);
             File.WriteAllText(Path.Combine(Blueprints, "Frostmourne_Item.jbp"), weapon.ToString(Formatting.Indented));
+        }
+
+        private static UnityEngine.Object PrepareIcon(string path)
+        {
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
+            TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (importer == null) throw new InvalidDataException("Frostmourne icon importer was not found.");
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spriteImportMode = SpriteImportMode.Single;
+            importer.alphaIsTransparency = true;
+            importer.mipmapEnabled = false;
+            importer.SaveAndReimport();
+            return AssetDatabase.LoadAllAssetsAtPath(path).FirstOrDefault(asset => asset is Sprite)
+                ?? AssetDatabase.LoadMainAssetAtPath(path);
         }
 
         private static JObject LoadPrototype()

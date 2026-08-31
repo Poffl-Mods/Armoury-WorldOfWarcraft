@@ -1,54 +1,59 @@
-# Armoury: World of Warcraft
+# Armoury: Frostmourne
 
-**Armoury: World of Warcraft** is a fan-made weapon mod for *Warhammer 40,000: Rogue Trader*. It aims to bring a selection of iconic weapons inspired by *World of Warcraft* into the game as custom equipment.
+**Armoury: Frostmourne** adds the legendary runeblade Frostmourne to *Warhammer 40,000: Rogue Trader* as a fully modelled, progression-based player weapon.
 
-## Project status
+This is the first standalone release developed in the **Armoury: World of Warcraft** repository. Future weapons are planned as separate mods and releases. Once the collection is complete, an optional combined **Armoury: World of Warcraft** package is planned.
 
-The mod is currently in active development and has **not been released yet**.
+## Features
 
-The first weapon under development is **Frostmourne**. Its custom model, textures, two-handed weapon prefab and initial test blueprint are already functional in game. Positioning, holster alignment, visuals and gameplay balance are still being refined.
+- Custom Frostmourne model, PBR materials, inventory icon, weapon alignment and holster presentation.
+- Six increasingly powerful variants with unique titles and statistics.
+- Soul-based progression instead of character-level progression.
+- A visible **Souls Devoured** buff tracks advancement.
+- Three unlockable signature abilities with custom icons and effects.
+- A persistent loot chest in the Warrant Chamber.
+- No external mod dependency.
 
-The current Frostmourne prototype uses Rogue Trader's `BrutalTwoHanded` animation style and is based on the two-handed greatsword/Executioner Greatblade weapon setup.
+## Acquiring Frostmourne
 
-## Planned weapons
+Frostmourne can be acquired during the Prologue in the chamber containing the **Warrant of Trade**. Look for the dedicated dark runeblade chest positioned near the ceremonial floor area, slightly south of the *Armoury: Adeptus Custodes* chest when that mod is installed.
 
-The current idea pool includes:
+The chest contains **Frostmourne V1**. Only this first version needs to be acquired.
 
-- Thunderfury, Blessed Blade of the Windseeker
-- Ashbringer
-- Doomhammer
-- Corrupted Ashbringer
-- Frostmourne
-- Gorehowl
-- Kingsmourne
-- Shalamayne
-  - Complete Shalamayne
-  - Shalamayne — Left Blade
-  - Shalamayne — Right Blade
-- Shadowmourne
-- Warglaives of Azzinoth
+For testing or existing campaigns, Frostmourne can also be added through ToyBox by searching for **Frostmourne**. The V1 blueprint ID is `f4a9c1e2837b4d5e8a6f9012bc34de56`.
 
-This list represents the intended long-term direction and is not a promise that every weapon will be implemented. Frostmourne is the initial proof of concept; further weapons will depend on development time and community interest.
+## Soul progression
 
-## Intended progression
+An enemy becomes marked after taking damage from Frostmourne. If that enemy dies afterwards, Frostmourne devours one soul. Enemies never touched by Frostmourne grant no soul.
 
-Weapons are planned to follow the established Armoury mod structure with up to six level-range variants. The player should only need to acquire the first version, with later variants providing appropriate progression towards endgame.
+The **Souls Devoured** buff displays the current total. Outside combat, the weapon automatically awakens at the following thresholds:
 
-The exact statistics, abilities and progression mechanics have not yet been finalized.
+| Variant | Souls | Title | Damage | Armour penetration | New ability |
+| --- | ---: | --- | ---: | ---: | --- |
+| V1 | 0 | Frostmourne | 16–23 | 30% | Runeblade Strike, Frozen Cleave |
+| V2 | 30 | Frostmourne, Taker of Souls | 18–26 | 35% | Soulrend |
+| V3 | 60 | Frostmourne, the Hungering Blade | 25–38 | 40% | — |
+| V4 | 90 | Frostmourne, Bane of the Living | 35–46 | 45% | Chains of Ice |
+| V5 | 120 | Frostmourne, Herald of Endless Winter | 38–56 | 50% | — |
+| V6 | 150 | Frostmourne, End of All Things | 39–68 | 60% | Harvest Soul |
 
-## Current development scope
+Weapon replacement is deferred until combat ends, preventing equipment changes during an encounter.
 
-- Custom game-ready Frostmourne model and PBR textures
-- Two-handed melee weapon integration
-- `BrutalTwoHanded` animations
-- Equipment and holster alignment
-- Material tuning for Rogue Trader's `Owlcat/Lit` shader
-- Initial weapon blueprint and localization
-- Future V1–V6 progression and unique mechanics
+## Abilities
+
+- **Runeblade Strike** — a focused 1 AP Frostmourne attack.
+- **Frozen Cleave** — a 2 AP sweeping melee attack.
+- **Soulrend** — unlocked at V2; swings Frostmourne to tear at a target up to eight cells away and erupts with a psychic Purge Soul effect on a successful hit.
+- **Chains of Ice** — unlocked at V4; encases and immobilizes a target in supernatural ice.
+- **Harvest Soul** — unlocked at V6; deals 200% weapon damage with 100% armour penetration.
 
 ## Installation
 
-There is currently no public release. Installation instructions will be added when the first test version is ready for release through ModFinder.
+Download `Armoury_Frostmourne_V1.zip` from the latest GitHub release, add the ZIP to ModFinder for Rogue Trader, and enable **Armoury: Frostmourne**. Completely restart the game after installing or updating the mod.
+
+## Development
+
+The repository contains the mod-owned source assets, generated blueprints, editor generators and runtime code. Local Unity caches, extracted game data and build output are intentionally excluded.
 
 ## Disclaimer
 

@@ -1,0 +1,70 @@
+{
+  "AssetId": "dbe5c6279f28408db73133a4320b20cb",
+  "Data": {
+    "$type": "618a7e0d54149064ab3ffa5d9057362c, BlueprintBuff",
+    "PrototypeLink": "60f2e3083d2d4498bfc755fe1618f78f",
+    "m_Overrides": [
+      "m_DisplayName",
+      "m_Description",
+      "m_Icon",
+      "Ranks",
+      "m_Flags",
+      "IsImportantBuff",
+      "IsClassFeature"
+    ],
+    "Components": [],
+    "Author": 0,
+    "Comment": "Vigil's Oath Critical Momentum",
+    "m_DisplayName": {
+      "m_Key": "wow-frostmourne-souls-name",
+      "m_OwnerString": "",
+      "m_OwnerPropertyPath": "",
+      "m_JsonPath": "",
+      "Shared": null
+    },
+    "m_Description": {
+      "m_Key": "wow-frostmourne-souls-description",
+      "m_OwnerString": "",
+      "m_OwnerPropertyPath": "",
+      "m_JsonPath": "",
+      "Shared": null
+    },
+    "m_Icon": {
+      "guid": "5150cae11f25aa3458921efe4747ea9b",
+      "fileid": 21300000
+    },
+    "m_AllowNonContextActions": false,
+    "m_Flags": "None",
+    "m_SoundTypeSwitch": {
+      "Value": "",
+      "Group": ""
+    },
+    "m_MuffledTypeSwitch": {
+      "Value": "",
+      "Group": ""
+    },
+    "Stacking": "Rank",
+    "ProlongWhenRankAdded": false,
+    "PriorityProperty": "Value1",
+    "Initiative": "ByCaster",
+    "Ranks": 150,
+    "FxOnStart": {
+      "AssetId": ""
+    },
+    "FxOnRemove": {
+      "AssetId": ""
+    },
+    "m_FXSettings": null,
+    "ResourceAssetIds": [],
+    "PlayOnlyFirstHitSound": false,
+    "m_priorityInUI": 0,
+    "m_AbilityGroups": [],
+    "m_Cyclical": false,
+    "NeedCollapseStack": true,
+    "IsImportantBuff": true,
+    "IsClassFeature": false
+  },
+  "Meta": {
+    "ShadowDeleted": false
+  }
+}

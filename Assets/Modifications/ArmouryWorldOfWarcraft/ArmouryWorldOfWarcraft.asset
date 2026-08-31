@@ -14,10 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Manifest:
     UniqueName: ArmouryWorldOfWarcraft
-    Version: 0.0.7
-    DisplayName: 'Armoury: World of Warcraft'
-    Description: Iconic weapons inspired by World of Warcraft for player use, beginning
-      with Frostmourne.
+    Version: 0.1.10
+    DisplayName: 'Armoury: Frostmourne'
+    Description: The legendary soul-devouring runeblade Frostmourne for player use.
     Author: Poffl
     Repository: 
     HomePage: 
