@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Manifest:
     UniqueName: ArmouryWorldOfWarcraft
-    Version: 1.0.4
+    Version: 1.0.1
     DisplayName: 'Armoury: Frostmourne'
     Description: The legendary soul-devouring runeblade Frostmourne for player use.
     Author: Poffl

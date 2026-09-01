@@ -2,36 +2,21 @@
 
 All notable changes to **Armoury: Frostmourne** are documented here.
 
-## 1.0.4
-
-### Changed
-
-- Souls Devoured now uses the original blueprint as a hidden persistent storage buff.
-- A separate visible mirror buff shows the retained soul count only while Frostmourne is equipped in one of the character's weapon slots.
-- Unequipping Frostmourne hides the soul display without losing stacks; re-equipping it restores the display automatically.
-
-## 1.0.3
-
-### Fixed
-
-- Existing Frostmourne weapons now synchronize both upward and downward to the tier matching the retained soul count after progression threshold changes.
-- Updating from 1.0.0 no longer requires removing Frostmourne or obtaining a replacement through ToyBox.
-
-## 1.0.2
-
-### Changed
-
-- Changed the soul recovery/test panel shortcut from F8 to Ctrl + F8 to avoid conflicting with quickload.
-- Existing Souls Devoured stacks remain compatible because the persistent buff keeps the same blueprint ID.
-
-## 1.0.1
+## 1.0.1 — Soul progression and UI fixes
 
 ### Changed
 
 - Rebalanced Frostmourne's awakening thresholds to 150, 300, 450, 600 and 750 souls.
-- Souls Devoured continues counting after the final awakening, up to 999 souls.
-- Souls Devoured is no longer marked as an important buff, reducing its prominent UI duplication.
+- Souls Devoured now continues counting after the final awakening, up to 999 souls.
+- Souls Devoured is no longer marked as an important buff, reducing duplicate UI presentation.
+- Changed the soul recovery panel shortcut from F8 to Ctrl + F8 to avoid conflicting with quickload.
+- The persistent soul counter is now hidden while Frostmourne is unequipped and restored when the weapon is equipped again.
 
+### Fixed
+
+- Existing soul stacks remain compatible with the update through the unchanged persistent buff blueprint ID.
+- Existing Frostmourne weapons now synchronize both upward and downward to the tier matching the retained soul count.
+- Updating from 1.0.0 no longer requires removing Frostmourne or obtaining a replacement through ToyBox.
 ## 1.0.0 — Frostmourne V1
 
 ### Added
