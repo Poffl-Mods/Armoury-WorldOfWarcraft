@@ -34,6 +34,8 @@ namespace ArmouryWorldOfWarcraft.Runtime
             "6f843da761ac439aa6d001640a5e203d", "d7f4af60411147f5be160d6d69f55faf"
         };
         private const string SoulBuffGuid = "dbe5c6279f28408db73133a4320b20cb";
+        private const string SoulDisplayBuffGuid = "ac41878a90594f53af75e05fca334817";
+        private const int MaxSoulCount = 999;
         private const string ChainsAbilityGuid = "6f843da761ac439aa6d001640a5e203d";
         private const string ImmobilizedBuffGuid = "3f47d39ccc2b4104bbf6c471c693bfa8";
         private static readonly MethodInfo SubscribeGlobalMethod = typeof(EventBus).GetMethod("SubscribeGlobal", BindingFlags.Static | BindingFlags.NonPublic);
@@ -60,11 +62,12 @@ namespace ArmouryWorldOfWarcraft.Runtime
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F8)) m_ShowSoulTestPanel = !m_ShowSoulTestPanel;
+            if (Input.GetKeyDown(KeyCode.F8) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) m_ShowSoulTestPanel = !m_ShowSoulTestPanel;
             if (Time.unscaledTime < m_NextCheck) return;
             m_NextCheck = Time.unscaledTime + 1f;
             RememberPlayerCollections();
             TryUpgradeAll();
+            SyncSoulDisplays();
         }
 
         private void OnGUI()
@@ -76,7 +79,7 @@ namespace ArmouryWorldOfWarcraft.Runtime
         private void DrawSoulTestWindow(int windowId)
         {
             int souls = GetPartySoulCount();
-            GUILayout.Label($"Souls Devoured: {souls}/150");
+            GUILayout.Label($"Souls Devoured: {souls}/{MaxSoulCount}");
             GUILayout.Label(IsCombatActive(Game.Instance?.Player) ? "Weapon upgrades wait until combat ends." : "Weapon upgrades apply immediately.");
             GUILayout.Space(6f);
             GUILayout.BeginHorizontal();
@@ -85,19 +88,19 @@ namespace ArmouryWorldOfWarcraft.Runtime
             GUILayout.EndHorizontal();
             GUILayout.Label("Advance to awakening threshold:");
             GUILayout.BeginHorizontal();
-            foreach (int threshold in new[] { 30, 60, 90 })
+            foreach (int threshold in new[] { 150, 300, 450 })
                 if (GUILayout.Button(threshold.ToString())) SetTestSoulMinimum(threshold);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            foreach (int threshold in new[] { 120, 150 })
+            foreach (int threshold in new[] { 600, 750 })
                 if (GUILayout.Button(threshold.ToString())) SetTestSoulMinimum(threshold);
             GUILayout.EndHorizontal();
             GUILayout.Space(5f);
-            GUILayout.Label("F8 closes this test window.");
+            GUILayout.Label("Ctrl + F8 closes this test window.");
             GUI.DragWindow(new Rect(0f, 0f, 10000f, 24f));
         }
 
-        private void AddTestSouls(int amount) => SetTestSoulMinimum(Math.Min(150, GetPartySoulCount() + amount));
+        private void AddTestSouls(int amount) => SetTestSoulMinimum(Math.Min(MaxSoulCount, GetPartySoulCount() + amount));
 
         private void SetTestSoulMinimum(int target)
         {
@@ -110,7 +113,7 @@ namespace ArmouryWorldOfWarcraft.Runtime
                 return;
             }
             SetSoulCount(bearer, Math.Max(GetPartySoulCount(), target));
-            Debug.Log($"[ArmouryWorldOfWarcraft] Soul test set Souls Devoured to {GetPartySoulCount()}/150.");
+            Debug.Log($"[ArmouryWorldOfWarcraft] Soul test set Souls Devoured to {GetPartySoulCount()}/{MaxSoulCount}.");
             TryUpgradeAll();
         }
 
@@ -143,9 +146,9 @@ namespace ArmouryWorldOfWarcraft.Runtime
         {
             if (unitEntity == null || !m_Marked.TryGetValue(unitEntity, out BaseUnitEntity bearer)) return;
             m_Marked.Remove(unitEntity);
-            int next = Math.Min(150, Math.Max(GetPartySoulCount(), GetSoulCount(bearer)) + 1);
+            int next = Math.Min(MaxSoulCount, Math.Max(GetPartySoulCount(), GetSoulCount(bearer)) + 1);
             SetSoulCount(bearer, next);
-            Debug.Log($"[ArmouryWorldOfWarcraft] Frostmourne devoured a soul ({next}/150).");
+            Debug.Log($"[ArmouryWorldOfWarcraft] Frostmourne devoured a soul ({next}/{MaxSoulCount}).");
             TryUpgradeAll();
         }
 
@@ -176,7 +179,7 @@ namespace ArmouryWorldOfWarcraft.Runtime
                 return;
             }
             Buff buff = bearer.Buffs.GetBuff(blueprint) ?? bearer.Buffs.Add(blueprint);
-            int target = Math.Max(1, Math.Min(150, count));
+            int target = Math.Max(1, Math.Min(MaxSoulCount, count));
             if (buff != null && buff.Rank < target) buff.AddRank(target - buff.Rank);
         }
 
@@ -184,6 +187,40 @@ namespace ArmouryWorldOfWarcraft.Runtime
         {
             Player player = Game.Instance?.Player;
             return player == null ? 0 : EnumeratePartyUnits(player).Select(GetSoulCount).DefaultIfEmpty(0).Max();
+        }
+
+        private void SyncSoulDisplays()
+        {
+            Player player = Game.Instance?.Player;
+            BlueprintBuff displayBlueprint = ResourcesLibrary.TryGetBlueprint(SoulDisplayBuffGuid) as BlueprintBuff;
+            if (player == null || displayBlueprint == null) return;
+            int souls = GetPartySoulCount();
+            foreach (BaseUnitEntity unit in EnumeratePartyUnits(player))
+            {
+                if (unit?.Buffs == null) continue;
+                Buff display = unit.Buffs.GetBuff(displayBlueprint);
+                bool shouldShow = souls > 0 && HasFrostmourneEquipped(unit);
+                if (!shouldShow)
+                {
+                    display?.Remove();
+                    continue;
+                }
+                display ??= unit.Buffs.Add(displayBlueprint);
+                if (display == null) continue;
+                if (display.Rank < souls) display.AddRank(souls - display.Rank);
+                else if (display.Rank > souls) display.RemoveRank(display.Rank - souls);
+            }
+        }
+
+        private static bool HasFrostmourneEquipped(BaseUnitEntity unit)
+        {
+            if (unit == null) return false;
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            PropertyInfo bodyProperty = unit.GetType().GetProperties(flags)
+                .FirstOrDefault(property => typeof(PartUnitBody).IsAssignableFrom(property.PropertyType));
+            if (bodyProperty?.GetValue(unit) is not PartUnitBody body) return false;
+            return body.Items.Any(item => item?.Blueprint != null
+                && WeaponGuids.Take(6).Contains(item.Blueprint.AssetGuid.ToString()));
         }
 
         private void RememberPlayerCollections()
@@ -223,7 +260,7 @@ namespace ArmouryWorldOfWarcraft.Runtime
         {
             if (item?.Blueprint == null) return;
             int currentTier = Array.IndexOf(WeaponGuids, item.Blueprint.AssetGuid.ToString());
-            if (currentTier < 0 || currentTier >= targetTier) return;
+            if (currentTier < 0 || currentTier == targetTier) return;
             BlueprintItem target = ResourcesLibrary.TryGetBlueprint(WeaponGuids[targetTier]) as BlueprintItem;
             if (target == null) { Debug.LogError("[ArmouryWorldOfWarcraft] Frostmourne tier blueprint not found: " + WeaponGuids[targetTier]); return; }
             var slot = item.HoldingSlot;
@@ -233,7 +270,7 @@ namespace ArmouryWorldOfWarcraft.Runtime
             if (item.Collection != null) item.Collection.Remove(item);
             ItemEntity replacement = collection.Add(target);
             if (slot != null) slot.InsertItem(replacement, false);
-            Debug.Log($"[ArmouryWorldOfWarcraft] Frostmourne awakened from V{currentTier + 1} to V{targetTier + 1} at {souls} souls.");
+            Debug.Log($"[ArmouryWorldOfWarcraft] Frostmourne synchronized from V{currentTier + 1} to V{targetTier + 1} at {souls} souls.");
         }
 
         private static IEnumerable<BaseUnitEntity> EnumeratePartyUnits(Player player)
@@ -258,8 +295,8 @@ namespace ArmouryWorldOfWarcraft.Runtime
         private static bool IsCombatActive(Player player) => player != null && (player.IsInCombat || EnumeratePartyUnits(player).Any(unit => unit != null && unit.IsInCombat));
         private static int TierForSouls(int souls)
         {
-            if (souls >= 150) return 5; if (souls >= 120) return 4; if (souls >= 90) return 3;
-            if (souls >= 60) return 2; if (souls >= 30) return 1; return 0;
+            if (souls >= 750) return 5; if (souls >= 600) return 4; if (souls >= 450) return 3;
+            if (souls >= 300) return 2; if (souls >= 150) return 1; return 0;
         }
     }
 }

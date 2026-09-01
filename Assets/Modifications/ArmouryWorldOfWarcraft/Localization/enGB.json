@@ -24,6 +24,6 @@
     "wow-frostmourne-harvest-name": { "Text": "Harvest Soul", "ShouldProcess": false },
     "wow-frostmourne-harvest-description": { "Text": "Deliver Frostmourne's final judgement, dealing 200% weapon damage with 100% armour penetration. Costs 2 AP and is available from V6. It may be used outside combat for testing.", "ShouldProcess": false },
     "wow-frostmourne-souls-name": { "Text": "Souls Devoured", "ShouldProcess": false },
-    "wow-frostmourne-souls-description": { "Text": "Each stack is one soul claimed from an enemy previously damaged by Frostmourne. The blade awakens at 30, 60, 90, 120, and 150 souls.", "ShouldProcess": false }
+    "wow-frostmourne-souls-description": { "Text": "Each stack is one soul claimed from an enemy previously damaged by Frostmourne. The blade awakens at 150, 300, 450, 600, and 750 souls. After its final awakening, the counter continues up to 999.", "ShouldProcess": false }
   }
 }

@@ -26,18 +26,21 @@ For testing or existing campaigns, Frostmourne can also be added through ToyBox 
 
 An enemy becomes marked after taking damage from Frostmourne. If that enemy dies afterwards, Frostmourne devours one soul. Enemies never touched by Frostmourne grant no soul.
 
-The **Souls Devoured** buff displays the current total. Outside combat, the weapon automatically awakens at the following thresholds:
+The **Souls Devoured** buff displays the current total while Frostmourne is equipped. Unequipping the weapon hides this display without losing the persistent soul count. Outside combat, the weapon automatically awakens at the following thresholds:
 
 | Variant | Souls | Title | Damage | Armour penetration | New ability |
 | --- | ---: | --- | ---: | ---: | --- |
 | V1 | 0 | Frostmourne | 16–23 | 30% | Runeblade Strike, Frozen Cleave |
-| V2 | 30 | Frostmourne, Taker of Souls | 18–26 | 35% | Soulrend |
-| V3 | 60 | Frostmourne, the Hungering Blade | 25–38 | 40% | — |
-| V4 | 90 | Frostmourne, Bane of the Living | 35–46 | 45% | Chains of Ice |
-| V5 | 120 | Frostmourne, Herald of Endless Winter | 38–56 | 50% | — |
-| V6 | 150 | Frostmourne, End of All Things | 39–68 | 60% | Harvest Soul |
+| V2 | 150 | Frostmourne, Taker of Souls | 18–26 | 35% | Soulrend |
+| V3 | 300 | Frostmourne, the Hungering Blade | 25–38 | 40% | — |
+| V4 | 450 | Frostmourne, Bane of the Living | 35–46 | 45% | Chains of Ice |
+| V5 | 600 | Frostmourne, Herald of Endless Winter | 38–56 | 50% | — |
+| V6 | 750 | Frostmourne, End of All Things | 39–68 | 60% | Harvest Soul |
 
 Weapon replacement is deferred until combat ends, preventing equipment changes during an encounter.
+After the final awakening at 750 souls, the counter continues up to 999.
+
+Existing soul stacks persist across mod updates. Outside combat, an existing Frostmourne automatically synchronizes upward or downward to the variant matching that retained total. If manual recovery is ever necessary, press **Ctrl + F8** outside combat to open the soul recovery panel and advance the counter to the appropriate awakening threshold.
 
 ## Abilities
 

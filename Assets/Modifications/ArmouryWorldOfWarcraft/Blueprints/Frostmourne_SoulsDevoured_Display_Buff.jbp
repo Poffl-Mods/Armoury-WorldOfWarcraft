@@ -1,5 +1,5 @@
 {
-  "AssetId": "dbe5c6279f28408db73133a4320b20cb",
+  "AssetId": "ac41878a90594f53af75e05fca334817",
   "Data": {
     "$type": "618a7e0d54149064ab3ffa5d9057362c, BlueprintBuff",
     "PrototypeLink": "60f2e3083d2d4498bfc755fe1618f78f",
@@ -34,7 +34,7 @@
       "fileid": 21300000
     },
     "m_AllowNonContextActions": false,
-    "m_Flags": "HiddenInUi",
+    "m_Flags": "None",
     "m_SoundTypeSwitch": {
       "Value": "",
       "Group": ""

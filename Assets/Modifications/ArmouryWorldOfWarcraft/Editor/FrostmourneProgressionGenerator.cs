@@ -23,6 +23,7 @@ namespace ArmouryWorldOfWarcraft.Editor
         private static readonly string[] NameKeys = { "base", "taker", "hungering", "bane", "herald", "end" };
 
         internal const string SoulBuffGuid = "dbe5c6279f28408db73133a4320b20cb";
+        internal const string SoulDisplayBuffGuid = "ac41878a90594f53af75e05fca334817";
         private const string StrikeGuid = "e92f69120a7d42cf9d5c392677c0bdf5";
         private const string CleaveGuid = "41ed610c9c2e4b69999de48979c98f78";
         private const string SoulrendGuid = "35b513974f244d57b72f21ec08f4f367";
@@ -163,18 +164,25 @@ namespace ArmouryWorldOfWarcraft.Editor
 
         private static void GenerateSoulBuff((string guid, long fileId) icon)
         {
-            JObject buff = PrepareClone(Load(BuffPrototype), SoulBuffGuid, BuffPrototype);
+            JObject storage = CreateSoulBuff(SoulBuffGuid, icon, "HiddenInUi");
+            Save("Frostmourne_SoulsDevoured_Buff", storage);
+            JObject display = CreateSoulBuff(SoulDisplayBuffGuid, icon, "None");
+            Save("Frostmourne_SoulsDevoured_Display_Buff", display);
+        }
+
+        private static JObject CreateSoulBuff(string guid, (string guid, long fileId) icon, string flags)
+        {
+            JObject buff = PrepareClone(Load(BuffPrototype), guid, BuffPrototype);
             buff["Data"]["Components"] = new JArray();
             SetLocalized(buff, "m_DisplayName", "wow-frostmourne-souls-name");
             SetLocalized(buff, "m_Description", "wow-frostmourne-souls-description");
             SetIcon(buff, icon);
-            Override(buff, "Ranks", 150);
-            Override(buff, "m_Flags", "None");
-            Override(buff, "IsImportantBuff", true);
+            Override(buff, "Ranks", 999);
+            Override(buff, "m_Flags", flags);
+            Override(buff, "IsImportantBuff", false);
             Override(buff, "IsClassFeature", false);
-            Save("Frostmourne_SoulsDevoured_Buff", buff);
+            return buff;
         }
-
         private static void RemoveUsageRestrictions(JObject ability)
         {
             JArray components = (JArray)ability["Data"]["Components"];
