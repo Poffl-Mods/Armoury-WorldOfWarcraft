@@ -18,7 +18,7 @@ This is the first standalone release developed in the **Armoury: World of Warcra
 
 Frostmourne can be acquired during the Prologue in the chamber containing the **Warrant of Trade**. Look for the dedicated dark runeblade chest positioned near the ceremonial floor area, slightly south of the *Armoury: Adeptus Custodes* chest when that mod is installed.
 
-The chest contains **Frostmourne V1**. Only this first version needs to be acquired.
+The chest contains **Frostmourne V1** in both two-handed and one-handed forms. Each form awakens automatically through V6 while retaining its weapon type.
 
 For testing or existing campaigns, Frostmourne can also be added through ToyBox by searching for **Frostmourne**. The V1 blueprint ID is `f4a9c1e2837b4d5e8a6f9012bc34de56`.
 
@@ -42,6 +42,21 @@ After the final awakening at 750 souls, the counter continues up to 999.
 
 Existing soul stacks persist across mod updates. Outside combat, an existing Frostmourne automatically synchronizes upward or downward to the variant matching that retained total. If manual recovery is ever necessary, press **Ctrl + F8** outside combat to open the soul recovery panel and advance the counter to the appropriate awakening threshold.
 
+### One-handed Frostmourne
+
+Both forms share the same soul counter, awakening thresholds, armour penetration and ability unlocks. One-handed base damage is 75% of the corresponding two-handed damage, rounded to the nearest integer (halves rounded up).
+
+| Variant | One-handed damage |
+| --- | ---: |
+| V1 | 12–17 |
+| V2 | 14–20 |
+| V3 | 19–29 |
+| V4 | 26–35 |
+| V5 | 29–42 |
+| V6 | 29–51 |
+
+Runeblade Strike, Frozen Cleave, Soulrend and Chains of Ice use the equipped weapon's damage. The one-handed Harvest Soul uses 58–102 base damage (twice one-handed V6) and retains 100% armour penetration. AP costs and control effects are unchanged. Existing one-handed test swords become the regular V1 and synchronize to the shared soul total outside combat.
+
 ## Abilities
 
 - **Runeblade Strike** — a focused 1 AP Frostmourne attack.
@@ -52,7 +67,7 @@ Existing soul stacks persist across mod updates. Outside combat, an existing Fro
 
 ## Installation
 
-Download `Armoury_Frostmourne_V1.zip` from the latest GitHub release, add the ZIP to ModFinder for Rogue Trader, and enable **Armoury: Frostmourne**. Completely restart the game after installing or updating the mod.
+Download `Armoury_Frostmourne_1.1.2.zip` from the latest GitHub release, add the ZIP to ModFinder for Rogue Trader, and enable **Armoury: Frostmourne**. Completely restart the game after installing or updating the mod. When updating from a test package or a mixed installation, replace the old mod folder instead of merging files to avoid retaining obsolete DLLs or duplicate blueprints. Keep your saved games.
 
 ## Development
 

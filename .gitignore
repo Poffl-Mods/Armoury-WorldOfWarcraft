@@ -79,3 +79,6 @@ secrets.json
 /Assets/Modifications/ArmouryWorldOfWarcraft/Art/*.prefab.meta
 /Assets/Modifications/ArmouryWorldOfWarcraft/Generated/
 /Assets/Modifications/ArmouryWorldOfWarcraft/Generated.meta
+
+# Local release packages and installation repair backups
+/ReleaseAssets/

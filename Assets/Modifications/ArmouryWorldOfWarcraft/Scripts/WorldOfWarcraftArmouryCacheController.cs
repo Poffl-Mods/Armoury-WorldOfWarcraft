@@ -19,7 +19,8 @@ namespace ArmouryWorldOfWarcraft.Runtime
         private static readonly string[] ArmouryItemGuids =
         {
             // Add future Armoury: World of Warcraft V1 weapon blueprints here.
-            "f4a9c1e2837b4d5e8a6f9012bc34de56"
+            "f4a9c1e2837b4d5e8a6f9012bc34de56",
+            "9d62b74c65f74c3a9c4100d4da41f033"
         };
         private float m_NextCheck;
 

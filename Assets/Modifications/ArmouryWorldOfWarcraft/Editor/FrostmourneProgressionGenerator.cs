@@ -1,3 +1,4 @@
+using ArmouryWorldOfWarcraft.Runtime;
 using System;
 using System.IO;
 using System.Linq;
@@ -145,7 +146,15 @@ namespace ArmouryWorldOfWarcraft.Editor
             Override(harvest, "Type", "Weapon");
             Override(harvest, "AbilityParamsSource", "Weapon");
             Save("Frostmourne_HarvestSoul_Ability", harvest);
+            JObject oneHandedHarvest = (JObject)harvest.DeepClone();
+            oneHandedHarvest["AssetId"] = FrostmourneOneHandedBlueprints.HarvestAbilityGuid;
+            JObject oneHandedOverride = oneHandedHarvest["Data"]["Components"].Children<JObject>()
+                .Single(c => c["$type"]?.ToString().Contains("WarhammerOverrideAbilityWeapon") == true);
+            oneHandedOverride["m_Weapon"] = "!bp_" + FrostmourneOneHandedBlueprints.HarvestWeaponGuid;
+            Save("Frostmourne_OneHanded_HarvestSoul_Ability", oneHandedHarvest);
         }
+
+        internal static int OneHandedDamage(int damage) => (int)Math.Round(damage * 0.75, MidpointRounding.AwayFromZero);
 
         private static void GenerateHiddenHarvestWeapon()
         {
@@ -160,11 +169,19 @@ namespace ArmouryWorldOfWarcraft.Editor
             Override(hidden, "CanBeUsedInGame", false);
             Override(hidden, "IsUnlootable", true);
             Save("Frostmourne_HiddenHarvest_Item", hidden);
+            JObject oneHandedHidden = (JObject)hidden.DeepClone();
+            oneHandedHidden["AssetId"] = FrostmourneOneHandedBlueprints.HarvestWeaponGuid;
+            Override(oneHandedHidden, "WarhammerDamage", OneHandedDamage(DamageMin[5]) * 2);
+            Override(oneHandedHidden, "WarhammerMaxDamage", OneHandedDamage(DamageMax[5]) * 2);
+            Override(oneHandedHidden, "m_HoldingType", "OneHanded");
+            Override(oneHandedHidden, "IsTwoHanded", false);
+            Save("Frostmourne_HiddenOneHandedHarvest_Item", oneHandedHidden);
         }
 
         private static void GenerateSoulBuff((string guid, long fileId) icon)
         {
-            JObject storage = CreateSoulBuff(SoulBuffGuid, icon, "HiddenInUi");
+            // The game also removes buffs without StayOnDeath when their owner becomes unconscious.
+            JObject storage = CreateSoulBuff(SoulBuffGuid, icon, "HiddenInUi, StayOnDeath");
             Save("Frostmourne_SoulsDevoured_Buff", storage);
             JObject display = CreateSoulBuff(SoulDisplayBuffGuid, icon, "None");
             Save("Frostmourne_SoulsDevoured_Display_Buff", display);

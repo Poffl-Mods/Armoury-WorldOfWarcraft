@@ -1,0 +1,253 @@
+{
+  "AssetId": "0021ff03b1c0410fbf49d0529628a5ba",
+  "Data": {
+    "$type": "c00f723cccf2d314198c42a572c631fd, BlueprintItemWeapon",
+    "PrototypeLink": "88863b6b0c61404b96b01c2bc648ba5e",
+    "m_Overrides": [
+      "m_DisplayName",
+      "m_Description",
+      "m_FlavorText",
+      "WarhammerDamage",
+      "WarhammerMaxDamage",
+      "WarhammerPenetration",
+      "ItemLevel",
+      "m_Rarity",
+      "m_Enchantments",
+      "WeaponAbilities.Ability1.Type",
+      "WeaponAbilities.Ability1.Mode",
+      "WeaponAbilities.Ability1.m_Ability",
+      "WeaponAbilities.Ability1.m_FXSettings",
+      "WeaponAbilities.Ability1.OnHitOverrideType",
+      "WeaponAbilities.Ability1.m_OnHitActions",
+      "WeaponAbilities.Ability1.AP",
+      "WeaponAbilities.Ability2.Type",
+      "WeaponAbilities.Ability2.Mode",
+      "WeaponAbilities.Ability2.m_Ability",
+      "WeaponAbilities.Ability2.m_FXSettings",
+      "WeaponAbilities.Ability2.OnHitOverrideType",
+      "WeaponAbilities.Ability2.m_OnHitActions",
+      "WeaponAbilities.Ability2.AP",
+      "WeaponAbilities.Ability3.Type",
+      "WeaponAbilities.Ability3.Mode",
+      "WeaponAbilities.Ability3.m_Ability",
+      "WeaponAbilities.Ability3.m_FXSettings",
+      "WeaponAbilities.Ability3.OnHitOverrideType",
+      "WeaponAbilities.Ability3.m_OnHitActions",
+      "WeaponAbilities.Ability3.AP",
+      "WeaponAbilities.Ability4.Type",
+      "WeaponAbilities.Ability4.Mode",
+      "WeaponAbilities.Ability4.m_Ability",
+      "WeaponAbilities.Ability4.m_FXSettings",
+      "WeaponAbilities.Ability4.OnHitOverrideType",
+      "WeaponAbilities.Ability4.m_OnHitActions",
+      "WeaponAbilities.Ability4.AP",
+      "WeaponAbilities.Ability5.Type",
+      "WeaponAbilities.Ability5.Mode",
+      "WeaponAbilities.Ability5.m_Ability",
+      "WeaponAbilities.Ability5.m_FXSettings",
+      "WeaponAbilities.Ability5.OnHitOverrideType",
+      "WeaponAbilities.Ability5.m_OnHitActions",
+      "WeaponAbilities.Ability5.AP",
+      "m_AttackOfOpportunityAbility",
+      "m_HoldingType",
+      "IsTwoHanded",
+      "m_VisualParameters.m_WeaponModel",
+      "m_VisualParameters.m_WeaponBeltModelOverride",
+      "m_VisualParameters.m_WeaponAnimationStyle"
+    ],
+    "Components": [],
+    "Author": "ElenaMironova",
+    "Comment": "",
+    "m_DisplayName": {
+      "m_Key": "wow-frostmourne-one-handed-v3-name",
+      "m_OwnerString": "",
+      "m_OwnerPropertyPath": "",
+      "m_JsonPath": "",
+      "Shared": null
+    },
+    "m_Description": {
+      "m_Key": "wow-frostmourne-hungering-description",
+      "m_OwnerString": "",
+      "m_OwnerPropertyPath": "",
+      "m_JsonPath": "",
+      "Shared": null
+    },
+    "m_Icon": {
+      "guid": "7312e1a9b20d0c9429fe3ccb3cd2878b",
+      "fileid": 21300000
+    },
+    "m_FlavorText": {
+      "m_Key": "wow-frostmourne-flavor",
+      "m_OwnerString": "",
+      "m_OwnerPropertyPath": "",
+      "m_JsonPath": "",
+      "Shared": null
+    },
+    "m_NonIdentifiedNameText": {
+      "m_Key": "",
+      "m_OwnerString": "",
+      "m_OwnerPropertyPath": "",
+      "m_JsonPath": "",
+      "Shared": null
+    },
+    "m_NonIdentifiedDescriptionText": {
+      "m_Key": "",
+      "m_OwnerString": "",
+      "m_OwnerPropertyPath": "",
+      "m_JsonPath": "",
+      "Shared": null
+    },
+    "m_NotStackable": false,
+    "m_Weight": 0.0,
+    "m_Origin": "MeleeWeaponry",
+    "m_Rarity": "Unique",
+    "m_Tag": "None",
+    "m_IsNotable": true,
+    "m_ProfitFactorCost": 0.0,
+    "m_CargoVolumePercent": 10,
+    "m_InventoryPutSound": "UI_INV_SharpSword_Put_Play",
+    "m_InventoryTakeSound": "UI_INV_SharpSword_Take_Play",
+    "ToCargoAutomatically": false,
+    "ItemLevel": 29,
+    "SpendCharges": false,
+    "Charges": 1,
+    "RestoreChargesAfterCombat": false,
+    "IsNonRemovable": false,
+    "IsUnlootable": false,
+    "m_EquipmentEntity": null,
+    "m_EquipmentEntityAlternatives": [],
+    "m_ForcedRampColorPresetIndex": -1,
+    "m_VisualParameters": {
+      "m_WeaponAnimationStyle": "BrutalOneHanded",
+      "m_SpecialAnimation": "None",
+      "m_BurstAnimationDelay": 0.0,
+      "m_WeaponModel": {
+        "guid": "1190b4bcd30318648a0564bc8594014c",
+        "fileid": 2656539807925631042
+      },
+      "m_WeaponBeltModelOverride": {
+        "guid": "fa60bcfe6efc3814a9032d9a68a7a854",
+        "fileid": 4276490317830106121
+      },
+      "m_WeaponSheathModelOverride": null,
+      "m_SoundSize": "None",
+      "m_SoundType": "None",
+      "m_SoundSizeSwitch": {
+        "Value": "",
+        "Group": ""
+      },
+      "m_SoundTypeSwitch": {
+        "Value": "Sharp",
+        "Group": "ProjectileType"
+      },
+      "m_MuffledTypeSwitch": {
+        "Value": "",
+        "Group": ""
+      },
+      "m_MissSoundType": "None",
+      "m_EquipSound": "Foley_WP_M_Sword_Equip_Play",
+      "m_UnequipSound": "Foley_WP_M_Sword_Remove_Play",
+      "m_OutOfAmmoSound": "",
+      "m_InventoryEquipSound": "UI_INV_SharpSword_Equip_Play",
+      "m_InventoryPutSound": "UI_INV_SharpSword_Put_Play",
+      "m_InventoryTakeSound": "UI_INV_SharpSword_Take_Play"
+    },
+    "m_OnHitActions": null,
+    "AbilityContainer": {
+      "Ability1": {
+        "Type": "SingleShot",
+        "Mode": "Default",
+        "m_Ability": "!bp_e92f69120a7d42cf9d5c392677c0bdf5",
+        "m_FXSettings": null,
+        "OnHitOverrideType": "None",
+        "m_OnHitActions": null,
+        "AP": 1
+      },
+      "Ability2": {
+        "Type": "AOE",
+        "Mode": "Default",
+        "m_Ability": "!bp_41ed610c9c2e4b69999de48979c98f78",
+        "m_FXSettings": null,
+        "OnHitOverrideType": "None",
+        "m_OnHitActions": null,
+        "AP": 2
+      },
+      "Ability3": {
+        "Type": "Custom",
+        "Mode": "Default",
+        "m_Ability": "!bp_35b513974f244d57b72f21ec08f4f367",
+        "m_FXSettings": null,
+        "OnHitOverrideType": "None",
+        "m_OnHitActions": null,
+        "AP": 1
+      },
+      "Ability4": {
+        "Type": "None",
+        "Mode": "Default",
+        "m_Ability": null,
+        "m_FXSettings": null,
+        "OnHitOverrideType": "None",
+        "m_OnHitActions": null,
+        "AP": 0
+      },
+      "Ability5": {
+        "Type": "None",
+        "Mode": "Default",
+        "m_Ability": null,
+        "m_FXSettings": null,
+        "OnHitOverrideType": "None",
+        "m_OnHitActions": null,
+        "AP": 0
+      }
+    },
+    "m_AttackOfOpportunityAbility": "!bp_e92f69120a7d42cf9d5c392677c0bdf5",
+    "m_AttackOfOpportunityAbilityFXSettings": "!bp_3f9a775831e04861afbfe9eaf8fe692b",
+    "Category": "Melee",
+    "Family": "Power",
+    "Classification": "Sword",
+    "m_HoldingType": "OneHanded",
+    "m_Range": "Melee",
+    "m_Heaviness": "NotHeavy",
+    "CanBeUsedInGame": true,
+    "m_TypeNameText": {
+      "m_Key": "",
+      "m_OwnerString": "",
+      "m_OwnerPropertyPath": "",
+      "m_JsonPath": "",
+      "Shared": null
+    },
+    "m_DefaultNameText": {
+      "m_Key": "",
+      "m_OwnerString": "",
+      "m_OwnerPropertyPath": "",
+      "m_JsonPath": "",
+      "Shared": null
+    },
+    "m_DescriptionText": {
+      "m_Key": "",
+      "m_OwnerString": "",
+      "m_OwnerPropertyPath": "",
+      "m_JsonPath": "",
+      "Shared": null
+    },
+    "IsTwoHanded": false,
+    "WarhammerDamage": 19,
+    "WarhammerMaxDamage": 29,
+    "WarhammerPenetration": 40,
+    "DodgePenetration": 0,
+    "AdditionalHitChance": 0,
+    "WarhammerRecoil": 0,
+    "WarhammerMaxDistance": 1,
+    "WarhammerMaxAmmo": -1,
+    "RateOfFire": 0,
+    "m_Enchantments": [],
+    "m_DamageType": {
+      "Type": "Rending"
+    },
+    "m_IsNatural": false,
+    "m_DamageStatBonusFactor": "Two"
+  },
+  "Meta": {
+    "ShadowDeleted": false
+  }
+}

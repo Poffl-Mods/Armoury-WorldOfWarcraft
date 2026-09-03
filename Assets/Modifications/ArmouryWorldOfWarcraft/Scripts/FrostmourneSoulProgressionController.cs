@@ -126,7 +126,11 @@ namespace ArmouryWorldOfWarcraft.Runtime
                 ?? dealDamage.Reason.Ability?.Blueprint?.AssetGuid.ToString();
             bool isFrostmourneDamage = Array.IndexOf(WeaponGuids, contextWeaponGuid) >= 0
                 || Array.IndexOf(WeaponGuids, reasonItemGuid) >= 0
-                || Array.IndexOf(FrostmourneAbilityGuids, sourceAbilityGuid) >= 0;
+                || Array.IndexOf(FrostmourneAbilityGuids, sourceAbilityGuid) >= 0
+                || FrostmourneOneHandedBlueprints.WeaponGuids.Contains(contextWeaponGuid)
+                || FrostmourneOneHandedBlueprints.WeaponGuids.Contains(reasonItemGuid)
+                || contextWeaponGuid == FrostmourneOneHandedBlueprints.HarvestWeaponGuid
+                || sourceAbilityGuid == FrostmourneOneHandedBlueprints.HarvestAbilityGuid;
             if (!isFrostmourneDamage) return;
             BaseUnitEntity target = dealDamage.TargetUnit;
             BaseUnitEntity bearer = dealDamage.InitiatorUnit;
@@ -220,7 +224,8 @@ namespace ArmouryWorldOfWarcraft.Runtime
                 .FirstOrDefault(property => typeof(PartUnitBody).IsAssignableFrom(property.PropertyType));
             if (bodyProperty?.GetValue(unit) is not PartUnitBody body) return false;
             return body.Items.Any(item => item?.Blueprint != null
-                && WeaponGuids.Take(6).Contains(item.Blueprint.AssetGuid.ToString()));
+                && (WeaponGuids.Take(6).Contains(item.Blueprint.AssetGuid.ToString())
+                    || FrostmourneOneHandedBlueprints.WeaponGuids.Contains(item.Blueprint.AssetGuid.ToString())));
         }
 
         private void RememberPlayerCollections()
@@ -259,10 +264,13 @@ namespace ArmouryWorldOfWarcraft.Runtime
         private static void TryUpgradeItem(ItemEntity item, int targetTier, int souls)
         {
             if (item?.Blueprint == null) return;
-            int currentTier = Array.IndexOf(WeaponGuids, item.Blueprint.AssetGuid.ToString());
+            string guid = item.Blueprint.AssetGuid.ToString();
+            string[] family = FrostmourneOneHandedBlueprints.WeaponGuids.Contains(guid)
+                ? FrostmourneOneHandedBlueprints.WeaponGuids : WeaponGuids;
+            int currentTier = Array.IndexOf(family, guid);
             if (currentTier < 0 || currentTier == targetTier) return;
-            BlueprintItem target = ResourcesLibrary.TryGetBlueprint(WeaponGuids[targetTier]) as BlueprintItem;
-            if (target == null) { Debug.LogError("[ArmouryWorldOfWarcraft] Frostmourne tier blueprint not found: " + WeaponGuids[targetTier]); return; }
+            BlueprintItem target = ResourcesLibrary.TryGetBlueprint(family[targetTier]) as BlueprintItem;
+            if (target == null) { Debug.LogError("[ArmouryWorldOfWarcraft] Frostmourne tier blueprint not found: " + family[targetTier]); return; }
             var slot = item.HoldingSlot;
             ItemsCollection collection = item.Collection ?? slot?.MaybeOwnerInventory?.Collection;
             if (collection == null) return;

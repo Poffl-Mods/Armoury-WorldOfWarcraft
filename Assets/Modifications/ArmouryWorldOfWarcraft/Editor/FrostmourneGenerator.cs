@@ -1,3 +1,4 @@
+using ArmouryWorldOfWarcraft.Runtime;
 using System;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace ArmouryWorldOfWarcraft.Editor
     internal static class FrostmourneGenerator
     {
         internal const string WeaponGuid = "f4a9c1e2837b4d5e8a6f9012bc34de56";
+        internal const string OneHandedWeaponGuid = "9d62b74c65f74c3a9c4100d4da41f033";
         private const string WeaponPrototype = "88863b6b0c61404b96b01c2bc648ba5e";
         private const string Root = "Assets/Modifications/ArmouryWorldOfWarcraft";
         private const string Art = Root + "/Art";
@@ -29,10 +31,12 @@ namespace ArmouryWorldOfWarcraft.Editor
         private const string PackedNormalPath = Art + "/Frostmourne_NormalPacked.asset";
         private const string PrefabPath = Art + "/Frostmourne.prefab";
         private const string BeltPrefabPath = Art + "/Frostmourne_Holstered.prefab";
+        private const string OneHandedPrefabPath = Art + "/Frostmourne_OneHanded.prefab";
+        private const string OneHandedBeltPrefabPath = Art + "/Frostmourne_OneHanded_Holstered.prefab";
 
-        private const string Version = "1.0.1";
+        private const string Version = "1.1.2";
 
-        [MenuItem("Armoury World of Warcraft/Build 1.0.1")]
+        [MenuItem("Armoury World of Warcraft/Build 1.1.2")]
         public static void Build()
         {
             Generate();
@@ -53,6 +57,8 @@ namespace ArmouryWorldOfWarcraft.Editor
             GenerateArt();
             GenerateBlueprint();
             FrostmourneProgressionGenerator.Generate();
+            for (int tier = 1; tier <= 6; tier++)
+                GenerateOneHandedBlueprint(JObject.Parse(File.ReadAllText(Path.Combine(Blueprints, $"Frostmourne_V{tier}_Item.jbp"))), tier);
             WorldOfWarcraftArmouryCacheGenerator.Generate();
             AssetDatabase.Refresh();
             Debug.Log("[ArmouryWorldOfWarcraft] Generated Frostmourne: " + WeaponGuid);
@@ -120,7 +126,54 @@ namespace ArmouryWorldOfWarcraft.Editor
 
             PrefabUtility.SaveAsPrefabAsset(beltRoot, BeltPrefabPath);
             UnityEngine.Object.DestroyImmediate(beltRoot);
+            GenerateOneHandedArt(fbx, material);
             AssetDatabase.SaveAssets();
+        }
+
+        private static void GenerateOneHandedArt(GameObject fbx, Material material)
+        {
+            GameObject root = new GameObject("Frostmourne_OneHanded_Root");
+            EquipmentOffsets offsets = root.AddComponent<EquipmentOffsets>();
+            ConfigureOneHandedOffsets(offsets);
+            AddOptionalComponent(root, "FxLocatorMapper");
+            AddRequiredComponent(root, "ArmouryWorldOfWarcraft.Runtime.FrostmourneMaterialBinder");
+            GameObject model = UnityEngine.Object.Instantiate(fbx);
+            model.name = "Frostmourne_OneHanded_FBX_Model";
+            model.transform.SetParent(root.transform, false);
+            model.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            model.transform.localScale = Vector3.one * 0.75f;
+            foreach (Renderer renderer in model.GetComponentsInChildren<Renderer>(true)) renderer.sharedMaterial = material;
+            Bounds bounds = CalculateBounds(model);
+            Vector3 gripPosition = new Vector3(-bounds.center.x, -(bounds.max.y - 0.16f) + 1.25f, -bounds.center.z);
+            // In-game calibration: move 0.36 along parent -Y from the previous +0.18 offset.
+            // Start from the original grip position to avoid a sideways offset.
+            model.transform.localPosition = gripPosition - Vector3.up * 0.18f;
+            Debug.Log($"[ArmouryWorldOfWarcraft] One-handed FBX bounds {bounds.size}; model offset {model.transform.localPosition}");
+            PrefabUtility.SaveAsPrefabAsset(root, OneHandedPrefabPath);
+            UnityEngine.Object.DestroyImmediate(root);
+
+            GameObject beltRoot = new GameObject("Frostmourne_OneHanded_Holstered_Root");
+            EquipmentOffsets beltOffsets = beltRoot.AddComponent<EquipmentOffsets>();
+            ConfigureOneHandedOffsets(beltOffsets);
+            AddOptionalComponent(beltRoot, "FxLocatorMapper");
+            AddRequiredComponent(beltRoot, "ArmouryWorldOfWarcraft.Runtime.FrostmourneMaterialBinder");
+            GameObject beltPivot = new GameObject("Frostmourne_OneHanded_HolsterPivot");
+            beltPivot.transform.SetParent(beltRoot.transform, false);
+            // In-game calibration: -Y moves left/outward; -Z raises the holster.
+            beltPivot.transform.localPosition = Vector3.back * 0.35f + Vector3.down * 0.10f;
+            beltPivot.transform.localRotation = Quaternion.Euler(75f, 0f, 0f);
+            GameObject beltRoll = new GameObject("Frostmourne_OneHanded_HolsterRoll");
+            beltRoll.transform.SetParent(beltPivot.transform, false);
+            beltRoll.transform.localRotation = Quaternion.AngleAxis(90f, Vector3.up);
+            GameObject beltModel = UnityEngine.Object.Instantiate(fbx);
+            beltModel.name = "Frostmourne_OneHanded_Holstered_FBX_Model";
+            beltModel.transform.SetParent(beltRoll.transform, false);
+            beltModel.transform.localPosition = gripPosition;
+            beltModel.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            beltModel.transform.localScale = Vector3.one * 0.75f;
+            foreach (Renderer renderer in beltModel.GetComponentsInChildren<Renderer>(true)) renderer.sharedMaterial = material;
+            PrefabUtility.SaveAsPrefabAsset(beltRoot, OneHandedBeltPrefabPath);
+            UnityEngine.Object.DestroyImmediate(beltRoot);
         }
 
         private static Bounds CalculateBounds(GameObject model)
@@ -153,6 +206,20 @@ namespace ArmouryWorldOfWarcraft.Editor
             SerializedProperty slot = slots.GetArrayElementAtIndex(index);
             slot.FindPropertyRelative("Position").vector3Value = position;
             slot.FindPropertyRelative("Rotation").vector3Value = rotation;
+        }
+
+        private static void ConfigureOneHandedOffsets(EquipmentOffsets offsets)
+        {
+            SerializedObject serialized = new SerializedObject(offsets);
+            SerializedProperty slots = serialized.FindProperty("m_SlotOffsets");
+            slots.arraySize = 12;
+            for (int i = 0; i < slots.arraySize; i++)
+            {
+                SerializedProperty slot = slots.GetArrayElementAtIndex(i);
+                slot.FindPropertyRelative("Position").vector3Value = Vector3.zero;
+                slot.FindPropertyRelative("Rotation").vector3Value = Vector3.zero;
+            }
+            serialized.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static void AddOptionalComponent(GameObject host, string typeName)
@@ -286,6 +353,32 @@ namespace ArmouryWorldOfWarcraft.Editor
             Override(weapon, "IsNonRemovable", false);
             Override(weapon, "m_IsNotable", true);
             File.WriteAllText(Path.Combine(Blueprints, "Frostmourne_Item.jbp"), weapon.ToString(Formatting.Indented));
+        }
+
+        private static void GenerateOneHandedBlueprint(JObject twoHandedWeapon, int tier)
+        {
+            UnityEngine.Object prefab = AssetDatabase.LoadMainAssetAtPath(OneHandedPrefabPath);
+            if (prefab == null || !AssetDatabase.TryGetGUIDAndLocalFileIdentifier(prefab, out string prefabGuid, out long prefabFileId)) throw new InvalidDataException("One-handed Frostmourne prefab reference could not be resolved.");
+            UnityEngine.Object beltPrefab = AssetDatabase.LoadMainAssetAtPath(OneHandedBeltPrefabPath);
+            if (beltPrefab == null || !AssetDatabase.TryGetGUIDAndLocalFileIdentifier(beltPrefab, out string beltPrefabGuid, out long beltPrefabFileId)) throw new InvalidDataException("One-handed Frostmourne holstered prefab reference could not be resolved.");
+            JObject weapon = (JObject)twoHandedWeapon.DeepClone();
+            weapon["AssetId"] = FrostmourneOneHandedBlueprints.WeaponGuids[tier - 1];
+            SetLocalized(weapon, "m_DisplayName", $"wow-frostmourne-one-handed-v{tier}-name");
+            weapon["Data"]["m_VisualParameters"]["m_WeaponModel"] = new JObject { ["guid"] = prefabGuid, ["fileid"] = prefabFileId };
+            weapon["Data"]["m_VisualParameters"]["m_WeaponBeltModelOverride"] = new JObject { ["guid"] = beltPrefabGuid, ["fileid"] = beltPrefabFileId };
+            weapon["Data"]["m_VisualParameters"]["m_WeaponAnimationStyle"] = "BrutalOneHanded";
+            Override(weapon, "m_HoldingType", "OneHanded");
+            Override(weapon, "IsTwoHanded", false);
+            Override(weapon, "WarhammerDamage", FrostmourneProgressionGenerator.OneHandedDamage((int)twoHandedWeapon["Data"]["WarhammerDamage"]));
+            Override(weapon, "WarhammerMaxDamage", FrostmourneProgressionGenerator.OneHandedDamage((int)twoHandedWeapon["Data"]["WarhammerMaxDamage"]));
+            AddOverride(weapon, "m_VisualParameters.m_WeaponModel");
+            AddOverride(weapon, "m_VisualParameters.m_WeaponBeltModelOverride");
+            AddOverride(weapon, "m_VisualParameters.m_WeaponAnimationStyle");
+            if (tier == 6)
+                weapon["Data"]["AbilityContainer"]["Ability5"]["m_Ability"] = "!bp_" + FrostmourneOneHandedBlueprints.HarvestAbilityGuid;
+            // Keep the V1 blueprint GUID stable for existing installations.
+            string file = $"Frostmourne_OneHanded_V{tier}_Item.jbp";
+            File.WriteAllText(Path.Combine(Blueprints, file), weapon.ToString(Formatting.Indented));
         }
 
         private static UnityEngine.Object PrepareIcon(string path)

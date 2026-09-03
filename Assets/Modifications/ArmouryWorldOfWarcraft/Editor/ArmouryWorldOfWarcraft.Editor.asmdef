@@ -3,6 +3,7 @@
   "rootNamespace": "ArmouryWorldOfWarcraft.Editor",
   "references": [
     "Mods.Editor",
+    "ArmouryWorldOfWarcraft.Runtime",
     "Unity.ScriptableBuildPipeline.Editor"
   ],
   "includePlatforms": ["Editor"],
